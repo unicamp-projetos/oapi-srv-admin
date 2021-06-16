@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+  database:
+    build : ./database
+    container_name: 'admindb'
+    ports:
+      - '5435:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=admindb
