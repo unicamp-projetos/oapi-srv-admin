@@ -1,11 +1,34 @@
 version: '3.3'
 services:
-  database:
-    build : ./database
-    container_name: 'admindb'
+  admindb:
+    build:
+      dockerfile: ./docker/db.dockerfile
+      context: .
+    container_name: evisita-admindb
+    image: evisita/admindb
     ports:
       - '5435:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=admindb
+    networks:
+      - evisita-network
+  oapi-srv-admin:
+    build:
+      dockerfile: ./docker/srv.dockerfile
+      context: .
+    image: evisita/oapi-srv-companions
+    container_name: evisita-oapisrvcompanions
+    ports:
+      - '8084:8080'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - evisita-network
+    depends_on:
+      - admindb
+
+networks:
+  evisita-network:
+    driver: bridge
